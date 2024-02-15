@@ -7,9 +7,16 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toJS } from "mobx";
+import { observer } from "mobx-react";
 import React, { useState } from "react";
-
-const TaskList = ({ tasks }) => {
+import useStores from "../../useStores";
+import { v4 as uuidv4 } from "uuid";
+const TaskList = observer(() => {
+  //
+  const store = useStores();
+  //
+  const tasks = toJS(store.TasksStore.tasks);
   // collapse: not complete
   const [open, setOpen] = useState();
   //
@@ -39,19 +46,36 @@ const TaskList = ({ tasks }) => {
               placeholder="Title"
               className="styled-input"
               value={task?.title}
+              onChange={(e) => console.log(e.target.value)}
             />
           </div>
           <div className="flex" style={{ gap: "8px" }}>
             <button className="flex action-box">
               <FontAwesomeIcon icon={faAngleDoubleDown} />
             </button>
-            <button className="flex action-box">
+            <button
+              className="flex action-box"
+              onClick={() => store.TasksStore.getTaskById(task.id)}
+            >
               <FontAwesomeIcon icon={faAngleDoubleUp} />
             </button>
-            <button className="flex action-box">
+            <button
+              className="flex action-box"
+              onClick={() => store.TasksStore.deleteTask(task.id)}
+            >
               <FontAwesomeIcon icon={faTrashCan} />
             </button>
-            <button className="flex action-box">
+            <button
+              className="flex action-box"
+              onClick={() =>
+                store.TasksStore.addTask({
+                  id: uuidv4(),
+                  title: "Title",
+                  parentId: task.id,
+                  subTasks: [],
+                })
+              }
+            >
               <FontAwesomeIcon icon={faPlusSquare} />
             </button>
           </div>
@@ -74,6 +98,6 @@ const TaskList = ({ tasks }) => {
       })}
     </div>
   );
-};
+});
 
 export default TaskList;

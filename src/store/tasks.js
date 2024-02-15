@@ -1,4 +1,5 @@
-import { action, makeObservable, observable, toJS } from "mobx";
+import { action, makeObservable, observable } from "mobx";
+import { toast } from "react-toastify";
 
 class TasksStore {
   label = "دیجی اکسپرس‌";
@@ -34,6 +35,7 @@ class TasksStore {
       deleteTask: action,
       getTaskById: action,
       updateTask: action,
+      moveTask: action,
     });
   }
 
@@ -88,6 +90,36 @@ class TasksStore {
     const taskToUpdate = this.getTaskById(taskId);
     if (taskToUpdate) {
       taskToUpdate.title = newValue; // Update the title
+    }
+  }
+
+  // Move task
+  moveTask(taskId, parentId, direction) {
+    // Find task
+    const parentTask = this.getTaskById(parentId);
+    // Check that is not main task
+    if (!parentTask) {
+      toast("This is the main task!");
+      return;
+    }
+
+    const index = parentTask.subTasks.findIndex((task) => task.id === taskId);
+
+    // Check direction
+    if (direction === "down" && index < parentTask.subTasks.length - 1) {
+      // Move to down
+      const temp = parentTask.subTasks[index];
+      parentTask.subTasks[index] = parentTask.subTasks[index + 1];
+      parentTask.subTasks[index + 1] = temp;
+    } else if (direction === "up" && index > 0) {
+      // Move to up
+      const temp = parentTask.subTasks[index];
+      parentTask.subTasks[index] = parentTask.subTasks[index - 1];
+      parentTask.subTasks[index - 1] = temp;
+    } else {
+      toast(
+        direction === "down" ? "Task is at the bottom." : "Task is at the top."
+      );
     }
   }
 }

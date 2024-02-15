@@ -18,6 +18,7 @@ const TaskList = observer(() => {
   //
   const store = useStores();
   const tasks = toJS(store.TasksStore.tasks);
+
   // Collapse
   const [openTask, setOpenTask] = useState({});
 
@@ -58,10 +59,22 @@ const TaskList = observer(() => {
             />
           </div>
           <div className="flex" style={{ gap: "8px" }}>
-            <button className="flex action-box">
+            <button
+              disabled={!task.parentId}
+              className={`flex action-box ${!task.parentId ? "disabled" : ""}`}
+              onClick={() =>
+                store.TasksStore.moveTask(task.id, task.parentId, "down")
+              }
+            >
               <FontAwesomeIcon icon={faAngleDoubleDown} />
             </button>
-            <button className="flex action-box">
+            <button
+              disabled={!task.parentId}
+              className={`flex action-box ${!task.parentId ? "disabled" : ""}`}
+              onClick={() =>
+                store.TasksStore.moveTask(task.id, task.parentId, "up")
+              }
+            >
               <FontAwesomeIcon icon={faAngleDoubleUp} />
             </button>
             {/* disable delete button for main task */}

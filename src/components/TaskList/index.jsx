@@ -17,12 +17,19 @@ import TaskTitleInput from "../taskTitleInput";
 const TaskList = observer(() => {
   //
   const store = useStores();
-  //
   const tasks = toJS(store.TasksStore.tasks);
-  // collapse: not complete
-  const [open, setOpen] = useState();
-  //
+  // Collapse
+  const [openTask, setOpenTask] = useState({});
+
+  const toggleTask = (taskId) => {
+    setOpenTask((prevOpenTasks) => ({
+      ...prevOpenTasks,
+      [taskId]: !prevOpenTasks[taskId],
+    }));
+  };
+
   const renderTasks = (task) => {
+    const isOpen = openTask[task.id];
     return (
       <div key={task.id} className="task-container">
         <div className="task-box">
@@ -30,11 +37,9 @@ const TaskList = observer(() => {
             {task?.subTasks?.length ? (
               <button
                 style={{ width: "20px" }}
-                onClick={() => {
-                  setOpen((prev) => !prev);
-                }}
+                onClick={() => toggleTask(task.id)}
               >
-                {open ? (
+                {isOpen ? (
                   <FontAwesomeIcon icon={faChevronDown} />
                 ) : (
                   <FontAwesomeIcon icon={faChevronRight} />
@@ -79,7 +84,7 @@ const TaskList = observer(() => {
             </button>
           </div>
         </div>
-        {open ? (
+        {isOpen ? (
           <div>
             {task?.subTasks?.length
               ? task?.subTasks.map((item) => renderTasks(item))

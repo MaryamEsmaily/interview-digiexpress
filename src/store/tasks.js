@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, toJS } from "mobx";
 
 class TasksStore {
   label = "دیجی اکسپرس‌";
@@ -39,39 +39,53 @@ class TasksStore {
 
   // TODO - add needed methods to manipulate 'tasks'
 
-  addTask(task) {
-    const checkTasks = () => {
-      const mapOverTaskList = (data) => {
-        data?.forEach((item) => {
-          if (task.parentId === item.id) {
-            item.subTasks.push(task);
-          } else if (item?.subTasks.length) {
-            mapOverTaskList(item?.subTasks);
-          }
-        });
-      };
-      mapOverTaskList(this.tasks);
-    };
-    checkTasks();
-  }
-
-  deleteTask(taskId) {
-    const deleteX = (tasks, taskId) => {
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].id === taskId) {
-          tasks.splice(i, 1);
-          return true;
-        }
-        if (tasks[i].subTasks && tasks[i].subTasks.length) {
-          if (deleteX(tasks[i].subTasks, taskId)) {
-            return true;
+  // get task by id for other action
+  getTaskById(taskId) {
+    const findTask = (tasks, taskId) => {
+      const task = tasks.find((task) => task.id === taskId);
+      if (task) {
+        return task;
+      }
+      for (const subTask of tasks) {
+        if (subTask.subTasks && subTask.subTasks.length) {
+          const foundTask = findTask(subTask.subTasks, taskId);
+          if (foundTask) {
+            return foundTask;
           }
         }
       }
-      return false;
+      return null;
     };
 
-    deleteX(this.tasks, taskId);
+    return findTask(this.tasks, taskId);
+  }
+
+  // add action
+  addTask(task) {
+    const parentTask = this.getTaskById(task.parentId);
+    if (parentTask) {
+      parentTask.subTasks.push(task);
+    }
+  }
+
+  // delete action
+  deleteTask(taskId) {
+    const taskToDelete = this.getTaskById(taskId);
+    if (taskToDelete) {
+      const parentTask = this.getTaskById(taskToDelete.parentId);
+      if (parentTask) {
+        parentTask.subTasks = parentTask.subTasks.filter(
+          (subTask) => subTask.id !== taskId
+        );
+      } else {
+        this.tasks = this.tasks.filter((task) => task.id !== taskId);
+      }
+    }
+  }
+
+  // update title action
+  updateTask(taskId) {
+    //  do sth
   }
 }
 

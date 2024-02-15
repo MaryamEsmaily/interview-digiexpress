@@ -12,6 +12,8 @@ import { observer } from "mobx-react";
 import React, { useState } from "react";
 import useStores from "../../useStores";
 import { v4 as uuidv4 } from "uuid";
+import TaskTitleInput from "../taskTitleInput";
+
 const TaskList = observer(() => {
   //
   const store = useStores();
@@ -42,21 +44,18 @@ const TaskList = observer(() => {
               <></>
             )}
 
-            <input
-              placeholder="Title"
-              className="styled-input"
-              value={task?.title}
-              onChange={(e) => console.log(e.target.value)}
+            <TaskTitleInput
+              initialTitle={task?.title}
+              onUpdateTitle={(newTitle) =>
+                store.TasksStore.updateTask(task.id, newTitle)
+              }
             />
           </div>
           <div className="flex" style={{ gap: "8px" }}>
             <button className="flex action-box">
               <FontAwesomeIcon icon={faAngleDoubleDown} />
             </button>
-            <button
-              className="flex action-box"
-              onClick={() => store.TasksStore.getTaskById(task.id)}
-            >
+            <button className="flex action-box">
               <FontAwesomeIcon icon={faAngleDoubleUp} />
             </button>
             <button

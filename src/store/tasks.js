@@ -84,8 +84,11 @@ class TasksStore {
   }
 
   // update title action
-  updateTask(taskId) {
-    //  do sth
+  updateTask(taskId, newValue) {
+    const taskToUpdate = this.getTaskById(taskId);
+    if (taskToUpdate) {
+      taskToUpdate.title = newValue; // Update the title
+    }
   }
 }
 

@@ -28,7 +28,9 @@ const TaskList = observer(() => {
     }));
   };
 
+  // handle render tasks and subtasks
   const renderTasks = (task) => {
+    // for collapse
     const isOpen = openTask[task.id];
     return (
       <div key={task.id} className="task-container">
@@ -48,7 +50,6 @@ const TaskList = observer(() => {
             ) : (
               <></>
             )}
-
             <TaskTitleInput
               initialTitle={task?.title}
               onUpdateTitle={(newTitle) =>
@@ -63,8 +64,10 @@ const TaskList = observer(() => {
             <button className="flex action-box">
               <FontAwesomeIcon icon={faAngleDoubleUp} />
             </button>
+            {/* disable delete button for main task */}
             <button
-              className="flex action-box"
+              disabled={!task.parentId}
+              className={`flex action-box ${!task.parentId ? "disabled" : ""}`}
               onClick={() => store.TasksStore.deleteTask(task.id)}
             >
               <FontAwesomeIcon icon={faTrashCan} />
@@ -85,11 +88,7 @@ const TaskList = observer(() => {
           </div>
         </div>
         {isOpen ? (
-          <div>
-            {task?.subTasks?.length
-              ? task?.subTasks.map((item) => renderTasks(item))
-              : null}
-          </div>
+          <div>{task?.subTasks.map((item) => renderTasks(item))}</div>
         ) : null}
       </div>
     );

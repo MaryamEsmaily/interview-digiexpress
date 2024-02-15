@@ -39,7 +39,7 @@ class TasksStore {
 
   // TODO - add needed methods to manipulate 'tasks'
 
-  // get task by id for other action
+  // Get task by id for other action
   getTaskById(taskId) {
     const findTask = (tasks, taskId) => {
       const task = tasks.find((task) => task.id === taskId);
@@ -60,7 +60,7 @@ class TasksStore {
     return findTask(this.tasks, taskId);
   }
 
-  // add action
+  // Add action
   addTask(task) {
     const parentTask = this.getTaskById(task.parentId);
     if (parentTask) {
@@ -68,7 +68,7 @@ class TasksStore {
     }
   }
 
-  // delete action
+  // Delete action
   deleteTask(taskId) {
     const taskToDelete = this.getTaskById(taskId);
     if (taskToDelete) {
@@ -83,7 +83,7 @@ class TasksStore {
     }
   }
 
-  // update title action
+  // Update title action
   updateTask(taskId, newValue) {
     const taskToUpdate = this.getTaskById(taskId);
     if (taskToUpdate) {

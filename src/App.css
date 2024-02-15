@@ -44,3 +44,8 @@ button {
   padding: 0 4px;
   border-radius: 4px;
 }
+
+.disabled {
+  background-color: rgb(208, 208, 208);
+  cursor: not-allowed;
+}

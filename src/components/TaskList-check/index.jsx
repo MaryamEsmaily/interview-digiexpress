@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import React, { useState } from "react";
 import useStores from "../../useStores";
 import { v4 as uuidv4 } from "uuid";
-import TaskTitleInput from "../taskTitleInput";
+import TaskTitleInput from "../TaskTitleInput-check";
 
 const TaskList = observer(() => {
   //

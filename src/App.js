@@ -1,5 +1,5 @@
 import "./App.css";
-import TaskList from "./components/taskList";
+import TaskList from "./components/TaskList-check";
 import logo from "./logo.svg";
 
 // TODO - feel free to modify "App" content and develope the solution
